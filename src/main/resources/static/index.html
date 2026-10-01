@@ -1,0 +1,835 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Task Management</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+        }
+
+        header {
+            background: #1f3c88;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .menu button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            background: #1f3c88;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .menu button:hover {
+            background: #162d68;
+        }
+
+        .section {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #1f3c88;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        textarea {
+            height: 90px;
+            resize: none;
+        }
+
+        .submit-btn {
+            background: #1f3c88;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .submit-btn:hover {
+            background: #162d68;
+        }
+
+        .cancel-btn {
+            background: #777;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #1f3c88;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        .update-btn {
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .update-btn:hover {
+            background: #d68910;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+
+        @media (max-width: 768px) {
+
+            .container {
+                width: 95%;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            th,
+            td {
+                padding: 8px;
+            }
+
+            .menu {
+                flex-direction: column;
+            }
+
+            .menu button {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Student Task Management System</h1>
+    <p>Manage Student Tasks Easily</p>
+</header>
+
+<div class="container">
+
+    <!-- MENU -->
+
+    <div class="menu">
+
+        <button onclick="showSection('addSection')">
+            Add Task
+        </button>
+
+        <button onclick="showSection('viewSection'); loadTasks()">
+            View Tasks
+        </button>
+
+    </div>
+
+
+    <!-- ADD TASK -->
+
+    <div id="addSection" class="section active">
+
+        <h2>Add Student Task</h2>
+
+        <form id="taskForm">
+
+            <div class="form-group">
+
+                <label>Student Name</label>
+
+                <input
+                    type="text"
+                    id="studentName"
+                    placeholder="Enter student name"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Task Title</label>
+
+                <input
+                    type="text"
+                    id="title"
+                    placeholder="Enter task title"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Description</label>
+
+                <textarea
+                    id="description"
+                    placeholder="Enter task description"
+                    required></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Status</label>
+
+                <select id="status">
+
+                    <option value="Pending">
+                        Pending
+                    </option>
+
+                    <option value="In Progress">
+                        In Progress
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="submit-btn">
+
+                Add Task
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- VIEW TASKS -->
+
+    <div id="viewSection" class="section">
+
+        <h2>All Student Tasks</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Student Name</th>
+
+                    <th>Task Title</th>
+
+                    <th>Description</th>
+
+                    <th>Status</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="taskTable">
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="no-data">
+
+                        No tasks found.
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- UPDATE TASK -->
+
+    <div id="updateSection" class="section">
+
+        <h2>Update Student Task</h2>
+
+        <form id="updateForm">
+
+            <input
+                type="hidden"
+                id="updateId">
+
+
+            <div class="form-group">
+
+                <label>Student Name</label>
+
+                <input
+                    type="text"
+                    id="updateStudentName"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Task Title</label>
+
+                <input
+                    type="text"
+                    id="updateTitle"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Description</label>
+
+                <textarea
+                    id="updateDescription"
+                    required></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Status</label>
+
+                <select id="updateStatus">
+
+                    <option value="Pending">
+                        Pending
+                    </option>
+
+                    <option value="In Progress">
+                        In Progress
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="submit-btn">
+
+                Update Task
+
+            </button>
+
+
+            <button
+                type="button"
+                class="cancel-btn"
+                onclick="showSection('viewSection')">
+
+                Cancel
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /*
+       SHOW SECTION
+    */
+
+    function showSection(sectionId) {
+
+        const sections =
+            document.querySelectorAll(".section");
+
+        sections.forEach(section => {
+            section.classList.remove("active");
+        });
+
+        document
+            .getElementById(sectionId)
+            .classList.add("active");
+    }
+
+
+    /*
+       ADD TASK
+    */
+
+    document
+        .getElementById("taskForm")
+        .addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            const task = {
+
+                studentName:
+                    document.getElementById("studentName").value,
+
+                title:
+                    document.getElementById("title").value,
+
+                description:
+                    document.getElementById("description").value,
+
+                status:
+                    document.getElementById("status").value
+            };
+
+
+            try {
+
+                const response = await fetch("/tasks", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(task)
+
+                });
+
+
+                if (response.ok) {
+
+                    alert("Task added successfully!");
+
+                    document
+                        .getElementById("taskForm")
+                        .reset();
+
+                    showSection("viewSection");
+
+                    loadTasks();
+
+                } else {
+
+                    alert("Failed to add task.");
+
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert("Server connection error.");
+
+            }
+
+        });
+
+
+    /*
+       VIEW ALL TASKS
+    */
+
+    async function loadTasks() {
+
+        try {
+
+            const response =
+                await fetch("/tasks");
+
+            const tasks =
+                await response.json();
+
+            const table =
+                document.getElementById("taskTable");
+
+            table.innerHTML = "";
+
+
+            if (tasks.length === 0) {
+
+                table.innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="no-data">
+
+                            No tasks found.
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+            }
+
+
+            tasks.forEach(task => {
+
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+
+                    <td>${task.id}</td>
+
+                    <td>${task.studentName || ""}</td>
+
+                    <td>${task.title}</td>
+
+                    <td>${task.description}</td>
+
+                    <td>${task.status}</td>
+
+                    <td>
+
+                        <button
+                            class="update-btn"
+                            onclick="editTask(${task.id})">
+
+                            Update
+
+                        </button>
+
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteTask(${task.id})">
+
+                            Delete
+
+                        </button>
+
+                    </td>
+
+                `;
+
+                table.appendChild(row);
+
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("Unable to load tasks.");
+
+        }
+
+    }
+
+
+    /*
+       GET ONE TASK FOR UPDATE
+    */
+
+    async function editTask(id) {
+
+        try {
+
+            const response =
+                await fetch(`/tasks/${id}`);
+
+            if (!response.ok) {
+
+                alert("Task not found.");
+
+                return;
+            }
+
+
+            const task =
+                await response.json();
+
+
+            document
+                .getElementById("updateId")
+                .value = task.id;
+
+
+            document
+                .getElementById("updateStudentName")
+                .value = task.studentName || "";
+
+
+            document
+                .getElementById("updateTitle")
+                .value = task.title;
+
+
+            document
+                .getElementById("updateDescription")
+                .value = task.description;
+
+
+            document
+                .getElementById("updateStatus")
+                .value = task.status;
+
+
+            showSection("updateSection");
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("Unable to get task.");
+
+        }
+
+    }
+
+
+    /*
+       UPDATE TASK
+    */
+
+    document
+        .getElementById("updateForm")
+        .addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+
+            const id =
+                document.getElementById("updateId").value;
+
+
+            const task = {
+
+                studentName:
+                    document.getElementById("updateStudentName").value,
+
+                title:
+                    document.getElementById("updateTitle").value,
+
+                description:
+                    document.getElementById("updateDescription").value,
+
+                status:
+                    document.getElementById("updateStatus").value
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetch(`/tasks/${id}`, {
+
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(task)
+
+                    });
+
+
+                if (response.ok) {
+
+                    alert("Task updated successfully!");
+
+                    showSection("viewSection");
+
+                    loadTasks();
+
+                } else {
+
+                    alert("Failed to update task.");
+
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert("Server connection error.");
+
+            }
+
+        });
+
+
+    /*
+       DELETE TASK
+    */
+
+    async function deleteTask(id) {
+
+        const confirmDelete =
+            confirm("Are you sure you want to delete this task?");
+
+
+        if (!confirmDelete) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(`/tasks/${id}`, {
+
+                    method: "DELETE"
+
+                });
+
+
+            if (response.ok) {
+
+                alert("Task deleted successfully!");
+
+                loadTasks();
+
+            } else {
+
+                alert("Failed to delete task.");
+
+            }
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("Server connection error.");
+
+        }
+
+    }
+
+</script>
+
+</body>
+
+</html>
+
